@@ -1,0 +1,172 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-canvas: var(--canvas);
+  --color-header: var(--header);
+  --color-surface: var(--surface);
+  --color-inset: var(--inset);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-primary: var(--primary);
+  --color-on-primary: var(--on-primary);
+  --color-primary-soft: var(--primary-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-chip: var(--chip);
+  --color-chart-cyan: var(--chart-cyan);
+  --color-chart-green: var(--chart-green);
+  --color-chart-violet: var(--chart-violet);
+  --color-chart-orange: var(--chart-orange);
+  --font-sans: Inter, "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+}
+
+:root,
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --canvas: #0b1326;
+  --header: #081020;
+  --surface: #131b2e;
+  --inset: #0b1326;
+  --ink: #dae2fd;
+  --muted: #a6b5c2;
+  --text-muted: var(--muted);
+  --border: #303b50;
+  --primary: #4cd7f6;
+  --on-primary: #003640;
+  --primary-soft: rgb(76 215 246 / 12%);
+  --danger: #ffb4ab;
+  --danger-soft: rgb(147 0 10 / 20%);
+  --chip: #1a263c;
+  --chart-cyan: #4cd7f6;
+  --chart-green: #4edea3;
+  --chart-violet: #a8a9ff;
+  --chart-orange: #ffb59d;
+  --chart-grid: rgb(134 147 151 / 22%);
+  --chart-hover: rgb(76 215 246 / 8%);
+  --city-selected: rgb(76 215 246 / 10%);
+  --card-highlight: rgb(76 215 246 / 55%);
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --canvas: #eff2f8;
+  --header: #f8f9ff;
+  --surface: #ffffff;
+  --inset: #edf1fb;
+  --ink: #111c2d;
+  --muted: #53605f;
+  --text-muted: var(--muted);
+  --border: #d5dfeb;
+  --primary: #004f49;
+  --on-primary: #ffffff;
+  --primary-soft: rgb(0 79 73 / 9%);
+  --danger: #a52a24;
+  --danger-soft: rgb(186 26 26 / 9%);
+  --chip: #e4ebfa;
+  --chart-cyan: #006b63;
+  --chart-green: #2e7650;
+  --chart-violet: #6259a8;
+  --chart-orange: #b54c20;
+  --chart-grid: rgb(63 73 71 / 20%);
+  --chart-hover: rgb(0 69 65 / 7%);
+  --city-selected: rgb(0 69 65 / 9%);
+  --card-highlight: rgb(0 69 65 / 55%);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 320px;
+  scroll-behavior: smooth;
+  background: var(--canvas);
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+  font-family: Inter, "Segoe UI", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+button,
+select {
+  font: inherit;
+}
+
+button:focus-visible,
+select:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.panel {
+  background: var(--surface);
+  border-color: var(--border);
+  box-shadow: 0 10px 30px -24px rgb(2 10 25 / 34%);
+}
+
+.metric-card {
+  position: relative;
+  overflow: hidden;
+  background: var(--surface);
+  border-color: var(--border);
+}
+
+.metric-card::before {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 2px;
+  background: var(--card-highlight);
+  content: "";
+}
+
+.metric-green::before { background: var(--chart-green); }
+.metric-violet::before { background: var(--chart-violet); }
+.metric-orange::before { background: var(--chart-orange); }
+
+.city-option {
+  background: var(--inset);
+  border-color: var(--border);
+}
+
+.city-option:hover,
+.city-selected {
+  background: var(--city-selected);
+  border-color: var(--primary);
+}
+
+.city-new-york.city-selected { border-color: var(--chart-cyan); }
+.city-washington.city-selected { border-color: var(--chart-violet); }
+.city-chicago.city-selected { border-color: var(--chart-green); }
+
+.filter-control {
+  border-color: var(--border);
+  background-color: var(--inset);
+}
+
+.chart-tooltip {
+  background: var(--surface);
+  border-color: var(--border);
+}
+
+.recharts-default-legend {
+  padding-top: 4px !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
