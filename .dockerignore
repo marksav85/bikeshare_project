@@ -1,0 +1,35 @@
+# Python environments, build products and caches
+**/.venv/
+**/venv/
+**/__pycache__/
+**/.pytest_cache/
+**/.mypy_cache/
+**/.ruff_cache/
+**/*.py[cod]
+**/*.egg-info/
+
+# Frontend dependencies and generated output
+**/node_modules/
+**/dist/
+
+# Git and local-only design references
+.git/
+**/.git/
+.aws/
+.agents/
+.codex/
+**/.env
+**/.env.*
+.stitch/
+**/.stitch/
+docs/design/stitch-output/
+**/stitch-output/
+docs/
+backend/tests/
+backend/bikeshare_analysis.egg-info/
+
+# Only the three application inputs enter the backend image.
+*.csv
+!chicago.csv
+!new_york_city.csv
+!washington.csv
