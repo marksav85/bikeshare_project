@@ -141,3 +141,39 @@ def test_unavailable_dataset_returns_safe_503() -> None:
         "detail": "Data is temporarily unavailable for the requested city."
     }
     assert "/private/data" not in response.text
+
+
+def test_health_endpoint_does_not_check_or_load_datasets() -> None:
+    def fail_if_checked() -> dict[str, bool]:
+        raise AssertionError("health must not inspect datasets")
+
+    response = TestClient(create_app(readiness_checker=fail_if_checked)).get("/api/healthz")
+    assert response.status_code == 200
+    assert response.json() == {"status": "ok"}
+
+
+def test_readiness_endpoint_reports_dataset_state_safely() -> None:
+    response = TestClient(create_app(
+        readiness_checker=lambda: {
+            "chicago": True,
+            "new_york_city": False,
+            "washington": True,
+        }
+    )).get("/api/readyz")
+    assert response.status_code == 503
+    assert response.json() == {
+        "status": "not_ready",
+        "datasets": {"chicago": True, "new_york_city": False, "washington": True},
+    }
+
+
+def test_readiness_endpoint_returns_ready_when_all_headers_are_valid() -> None:
+    response = TestClient(create_app(
+        readiness_checker=lambda: {
+            "chicago": True,
+            "new_york_city": True,
+            "washington": True,
+        }
+    )).get("/api/readyz")
+    assert response.status_code == 200
+    assert response.json()["status"] == "ready"

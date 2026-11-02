@@ -1,0 +1,19 @@
+# Exact Python 3.12 runtime dependency set for repeatable production installs.
+# Keep aligned with the runtime dependencies in pyproject.toml when versions are reviewed.
+annotated-types==0.8.0
+anyio==4.16.0
+click==8.5.0
+fastapi==0.119.1
+h11==0.16.0
+idna==3.20
+numpy==2.5.4
+pandas==2.3.3
+pydantic==2.14.2
+pydantic_core==2.50.2
+python-dateutil==4.0.0
+pytz==2026.6
+starlette==0.48.0
+typing-inspection==0.4.4
+typing_extensions==4.16.0
+tzdata==2026.6
+uvicorn==0.54.0

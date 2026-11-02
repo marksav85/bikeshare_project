@@ -1,6 +1,7 @@
 """Read and validate the project's CSV inputs."""
 
 from pathlib import Path
+import csv
 
 import pandas as pd
 
@@ -45,3 +46,18 @@ def load_city_data(city: str, *, data_dir: Path | None = None) -> pd.DataFrame:
         if column in frame:
             frame[column] = frame[column].astype("string").str.strip().replace("", pd.NA)
     return frame
+
+
+def check_dataset_readiness(*, data_dir: Path | None = None) -> dict[str, bool]:
+    """Check dataset presence, readability, and headers without loading trip rows."""
+    root = Path(data_dir) if data_dir is not None else PROJECT_ROOT
+    readiness: dict[str, bool] = {}
+    for city, filename in CITY_DATA.items():
+        path = root / filename
+        try:
+            with path.open("r", encoding="utf-8-sig", newline="") as source:
+                header = next(csv.reader(source), None)
+            readiness[city] = header is not None and REQUIRED_COLUMNS.issubset(header)
+        except (OSError, UnicodeError, csv.Error):
+            readiness[city] = False
+    return readiness

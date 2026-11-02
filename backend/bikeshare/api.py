@@ -10,7 +10,7 @@ from fastapi import FastAPI, Query
 from fastapi.responses import JSONResponse
 
 from .analysis import WEEKDAYS, analyze_trips
-from .data import CITY_DATA, DataValidationError, load_city_data
+from .data import CITY_DATA, DataValidationError, check_dataset_readiness, load_city_data
 
 logger = logging.getLogger(__name__)
 CityId = Literal["chicago", "new_york_city", "washington"]
@@ -18,6 +18,7 @@ WeekdayId = Literal[
     "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"
 ]
 DataLoader = Callable[[str], pd.DataFrame]
+ReadinessChecker = Callable[[], dict[str, bool]]
 
 CITY_NAMES = {
     "chicago": "Chicago",
@@ -55,10 +56,31 @@ def _demographic_response(stats: dict[str, object]) -> dict[str, object]:
     return {"gender": gender, "birth_year": birth_year}
 
 
-def create_app(data_loader: DataLoader | None = None) -> FastAPI:
+def create_app(
+    data_loader: DataLoader | None = None,
+    readiness_checker: ReadinessChecker | None = None,
+) -> FastAPI:
     """Create an app; a loader override keeps endpoint tests isolated from large CSVs."""
     loader = data_loader or _cached_city_data
+    check_readiness = readiness_checker or check_dataset_readiness
     app = FastAPI(title="BikeShare API", version="1.0.0")
+
+    @app.get("/api/healthz")
+    async def health() -> dict[str, str]:
+        """Report process health without touching the datasets."""
+        return {"status": "ok"}
+
+    @app.get("/api/readyz", response_model=None)
+    def readiness() -> dict[str, object] | JSONResponse:
+        """Check each CSV's availability and required header without loading rows."""
+        checked = check_readiness()
+        datasets = {city: bool(checked.get(city, False)) for city in CITY_DATA}
+        if not all(datasets.values()):
+            return JSONResponse(
+                status_code=503,
+                content={"status": "not_ready", "datasets": datasets},
+            )
+        return {"status": "ready", "datasets": datasets}
 
     @app.get("/api/cities")
     def list_cities() -> dict[str, object]:
