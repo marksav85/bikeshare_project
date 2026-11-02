@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bikeshare-analysis"
+version = "0.1.0"
+description = "Reusable analysis functions for the BikeShare project"
+requires-python = ">=3.12,<3.13"
+dependencies = ["pandas>=2.2,<3"]
+
+[project.optional-dependencies]
+dev = ["pytest>=9,<10"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["bikeshare*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-ra"
