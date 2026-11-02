@@ -1,4 +1,0 @@
-pandas<3,>=2.2
-
-[test]
-pytest<9,>=8

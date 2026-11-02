@@ -2,3 +2,6 @@
 .pytest_cache/
 __pycache__/
 *.py[cod]
+
+# Python packaging metadata
+*.egg-info/
