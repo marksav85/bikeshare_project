@@ -9,7 +9,10 @@
     <script>
       try {
         const theme = localStorage.getItem('bikeshare-theme')
-        document.documentElement.dataset.theme = theme === 'light' ? 'light' : 'dark'
+        const selectedTheme = theme === 'light' ? 'light' : 'dark'
+        document.documentElement.dataset.theme = selectedTheme
+        const themeColor = document.querySelector('meta[name="theme-color"]')
+        themeColor?.setAttribute('content', selectedTheme === 'light' ? '#eff2f8' : '#0b1326')
       } catch {
         document.documentElement.dataset.theme = 'dark'
       }

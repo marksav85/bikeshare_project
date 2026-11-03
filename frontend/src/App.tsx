@@ -219,6 +219,10 @@ function App() {
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme
+    document.querySelector<HTMLMetaElement>('meta[name="theme-color"]')?.setAttribute(
+      'content',
+      theme === 'dark' ? '#0b1326' : '#eff2f8',
+    )
     try {
       localStorage.setItem('bikeshare-theme', theme)
     } catch {
