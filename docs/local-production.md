@@ -1,6 +1,6 @@
 # BikeShare local production preparation
 
-This guide covers repeatable local preparation and verification. It is not a VPS deployment guide and contains no server-specific paths, identities, or Nginx/systemd configuration.
+This guide covers local development, production builds and verification. It does not contain VPS administration procedures.
 
 ## Python 3.12 environment
 
@@ -23,7 +23,7 @@ cd backend
 ../backend/.venv/bin/python -m uvicorn bikeshare.api:app --host 127.0.0.1 --port 8000
 ```
 
-The CSV paths are resolved from the backend source location, so keep `chicago.csv`, `new_york_city.csv`, and `washington.csv` at the repository root for this initial deployment. Keep the repository root outside any static web document root; serve only the built frontend directory. The datasets are read-only inputs and are not included in the frontend build.
+The CSV paths are resolved from the backend source location. The current Docker build expects `chicago.csv`, `new_york_city.csv`, and `washington.csv` at the repository root. Keep the repository root outside any static web document root; serve only the built frontend directory. The datasets are read-only inputs and are not included in the frontend build.
 
 Check process health and dataset readiness separately:
 
@@ -43,7 +43,7 @@ for city in chicago new_york_city washington; do
 done
 ```
 
-The first data-dependent request in a process loads that city's CSV; the process then caches its DataFrame. One local sequential run over all three datasets peaked at about 256 MiB RSS. Treat this only as a local baseline: allow additional headroom for the operating system, other hosted services, temporary analysis allocations, and overlapping requests. Keep one API worker initially and measure on the target environment before increasing worker or request concurrency.
+The first data-dependent request in a process loads that city's CSV; the process then caches its DataFrame. One local sequential run over all three datasets peaked at about 256 MiB RSS. Treat this only as a local baseline: allow additional headroom for the operating system, other hosted services, temporary analysis allocations, and overlapping requests. Production Compose currently runs one API worker; measure on the target environment before increasing worker or request concurrency.
 
 ## Frontend production build
 
@@ -62,7 +62,7 @@ The static production files are emitted to `frontend/dist`; Vite is not required
 python3 -m http.server 4173 --directory frontend/dist
 ```
 
-This checks that the HTML and built assets can be served as static files. It does not proxy `/api`. The frontend uses same-origin relative `/api/...` requests, and Vite's proxy applies only to its development server. A production-like end-to-end check therefore requires a local reverse proxy or the approved staging/proxy environment to serve `frontend/dist` and forward `/api/` to Uvicorn.
+This checks that the HTML and built assets can be served as static files. It does not proxy `/api`. The frontend uses same-origin relative `/api/...` requests, and Vite's proxy applies only to its development server. A production-like end-to-end check therefore requires a local reverse proxy or a separately configured Docker integration environment to serve the frontend and forward `/api/` to Uvicorn.
 
 ## Troubleshooting
 
@@ -71,7 +71,3 @@ This checks that the HTML and built assets can be served as static files. It doe
 - **Filters/statistics return 503:** Check application logs for the server-side diagnostic. Confirm file readability and schema; readiness validates headers only, while a data-dependent request parses rows.
 - **Frontend loads but API requests fail:** Confirm the production reverse proxy forwards `/api/` without removing that prefix. The backend routes themselves include `/api/`.
 - **Memory or response latency is high:** Measure with the target data, concurrency, and the other services running. Each worker has its own in-memory dataset cache.
-
-## Before public launch
-
-Dataset provenance, applicable license, attribution, and permission for public hosting remain unverified. Resolve these separately before publishing the application or datasets. No deployment, VPS inspection, or production configuration is covered by this local guide.
