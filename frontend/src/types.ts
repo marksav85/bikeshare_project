@@ -1,12 +1,6 @@
 export type CityId = 'chicago' | 'new_york_city' | 'washington'
 export type WeekdayId =
-  | 'monday'
-  | 'tuesday'
-  | 'wednesday'
-  | 'thursday'
-  | 'friday'
-  | 'saturday'
-  | 'sunday'
+  'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday'
 
 export type City = { id: CityId; name: string }
 export type FilterOption<T> = { value: T; label: string }

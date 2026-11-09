@@ -1,5 +1,6 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
+/* Shared design tokens and light/dark theme palettes */
 @theme inline {
   --color-canvas: var(--canvas);
   --color-header: var(--header);
@@ -18,12 +19,12 @@
   --color-chart-green: var(--chart-green);
   --color-chart-violet: var(--chart-violet);
   --color-chart-orange: var(--chart-orange);
-  --font-sans: Inter, "Segoe UI", system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+  --font-sans: Inter, 'Segoe UI', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'SFMono-Regular', Consolas, monospace;
 }
 
 :root,
-:root[data-theme="dark"] {
+:root[data-theme='dark'] {
   color-scheme: dark;
   --canvas: #0b1326;
   --header: #081020;
@@ -49,7 +50,7 @@
   --card-highlight: rgb(76 215 246 / 55%);
 }
 
-:root[data-theme="light"] {
+:root[data-theme='light'] {
   color-scheme: light;
   --canvas: #eff2f8;
   --header: #f8f9ff;
@@ -75,6 +76,7 @@
   --card-highlight: rgb(0 69 65 / 55%);
 }
 
+/* Global document defaults and keyboard-focus behavior */
 * {
   box-sizing: border-box;
 }
@@ -89,7 +91,7 @@ body {
   min-width: 320px;
   min-height: 100vh;
   margin: 0;
-  font-family: Inter, "Segoe UI", system-ui, sans-serif;
+  font-family: Inter, 'Segoe UI', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
@@ -106,6 +108,7 @@ a:focus-visible {
   outline-offset: 2px;
 }
 
+/* Dashboard component styling and theme-aware overrides */
 .panel {
   background: var(--surface);
   border-color: var(--border);
@@ -124,12 +127,18 @@ a:focus-visible {
   inset: 0 0 auto;
   height: 2px;
   background: var(--card-highlight);
-  content: "";
+  content: '';
 }
 
-.metric-green::before { background: var(--chart-green); }
-.metric-violet::before { background: var(--chart-violet); }
-.metric-orange::before { background: var(--chart-orange); }
+.metric-green::before {
+  background: var(--chart-green);
+}
+.metric-violet::before {
+  background: var(--chart-violet);
+}
+.metric-orange::before {
+  background: var(--chart-orange);
+}
 
 .city-option {
   background: var(--inset);
@@ -142,9 +151,15 @@ a:focus-visible {
   border-color: var(--primary);
 }
 
-.city-new-york.city-selected { border-color: var(--chart-cyan); }
-.city-washington.city-selected { border-color: var(--chart-violet); }
-.city-chicago.city-selected { border-color: var(--chart-green); }
+.city-new-york.city-selected {
+  border-color: var(--chart-cyan);
+}
+.city-washington.city-selected {
+  border-color: var(--chart-violet);
+}
+.city-chicago.city-selected {
+  border-color: var(--chart-green);
+}
 
 .filter-control {
   border-color: var(--border);
@@ -160,6 +175,7 @@ a:focus-visible {
   padding-top: 4px !important;
 }
 
+/* Honor the user's reduced-motion preference. */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

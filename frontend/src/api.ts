@@ -1,10 +1,4 @@
-import type {
-  City,
-  CityId,
-  FilterOptions,
-  FilterSelection,
-  Statistics,
-} from './types'
+import type { City, CityId, FilterOptions, FilterSelection, Statistics } from './types'
 
 async function getJson<T>(path: string, signal?: AbortSignal): Promise<T> {
   const response = await fetch(path, { signal, headers: { Accept: 'application/json' } })
@@ -27,10 +21,7 @@ export function fetchCities(signal?: AbortSignal): Promise<{ cities: City[] }> {
   return getJson('/api/cities', signal)
 }
 
-export function fetchFilters(
-  city: CityId,
-  signal?: AbortSignal,
-): Promise<FilterOptions> {
+export function fetchFilters(city: CityId, signal?: AbortSignal): Promise<FilterOptions> {
   return getJson(`/api/filters?city=${encodeURIComponent(city)}`, signal)
 }
 
