@@ -33,7 +33,7 @@ BikeShare Explorer is a full-stack data visualization application for exploring 
 | API communication       | REST API, JSON                          |
 | Containerization        | Docker, Docker Compose                  |
 | Web serving and hosting | Nginx, Caddy, Contabo VPS               |
-| Testing and quality     | pytest, HTTPX, ESLint, TypeScript       |
+| Testing and quality     | pytest, HTTPX, Vitest, Prettier, ESLint, TypeScript |
 
 ## Technical Highlights
 
@@ -102,21 +102,21 @@ python3.12 -m venv backend/.venv
 backend/.venv/bin/python -m pip install -e 'backend/.[dev]'
 ```
 
-Start the FastAPI backend:
-
-```
-backend/.venv/bin/python -m uvicorn bikeshare.api:app --app-dir backend --reload --host 127.0.0.1 --port 8000
-```
-
-In a separate terminal, install and start the frontend:
+Install the frontend dependencies:
 
 ```
 cd frontend
 npm ci
-npm run dev
+cd ..
 ```
 
-Open the local URL displayed by Vite. During development, Vite forwards `/api/` requests to the FastAPI backend.
+Start both local development servers from the repository root:
+
+```
+./scripts/dev.sh
+```
+
+Open the frontend URL displayed by Vite. The backend listens at `http://127.0.0.1:8000`, with interactive API documentation at `http://127.0.0.1:8000/docs`. During development, Vite forwards `/api/` requests to FastAPI. Press Ctrl+C to stop both servers.
 
 ### Testing and verification
 
@@ -127,12 +127,17 @@ cd backend
 .venv/bin/python -m pytest -v
 ```
 
-Run frontend linting and production build checks from `frontend/`:
+Run frontend tests, formatting, linting and production build checks from `frontend/`:
 
 ```
+cd ../frontend
+npm run test
+npm run format:check
 npm run lint
 npm run build
 ```
+
+The production build runs TypeScript project checking before Vite creates the static assets.
 
 ## Project Status
 

@@ -2,6 +2,37 @@
 
 This guide covers local development, production builds and verification. It does not contain VPS administration procedures.
 
+## Combined local development
+
+The repository includes `scripts/dev.sh` to start the backend and frontend together. It expects the existing `backend/.venv` Python environment to contain the application runtime dependencies, `frontend/node_modules` to be installed, npm to be on `PATH`, and the three CSV files to remain at the repository root. The launcher checks these prerequisites and reports missing dependencies; it does not install packages.
+
+From the repository root, run:
+
+```bash
+./scripts/dev.sh
+```
+
+The backend listens at `http://127.0.0.1:8000`; its interactive API documentation is at `http://127.0.0.1:8000/docs`. Vite normally serves the frontend at `http://localhost:5173`. Use the actual `Local` URL printed by Vite. Press Ctrl+C to stop both development processes. If either server exits, the launcher stops the other process and returns.
+
+The launcher uses fixed backend port 8000 and does not select another backend port. If that port is occupied, Uvicorn exits and the launcher stops the frontend as well. On Linux, inspect listeners with `ss -ltnp 'sport = :8000'` (or use port 5173 when checking Vite). Identify the process and confirm whether it belongs to this BikeShare checkout before taking action. If frontend port 5173 is occupied, Vite may choose another port; use Vite's printed URL rather than assuming the launcher's expected address is still correct.
+
+To inspect a possible leftover process, check its command with `ps -o pid,ppid,args -p <PID>` and, on Linux, its working directory with `readlink /proc/<PID>/cwd`. Send `kill -TERM <PID>` only when both identify a leftover BikeShare development process. Do not terminate an unfamiliar service or use broad process-name kill commands.
+
+The services can also be started separately. From the repository root, start the backend in one terminal:
+
+```bash
+backend/.venv/bin/python -m uvicorn bikeshare.api:app --app-dir backend --reload --host 127.0.0.1 --port 8000
+```
+
+In another terminal, start Vite:
+
+```bash
+cd frontend
+npm run dev
+```
+
+These commands assume the Python and npm dependencies have already been installed.
+
 ## Python 3.12 environment
 
 Create the project environment and install the exact runtime dependency set:
