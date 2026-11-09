@@ -30,6 +30,7 @@ MONTH_NAMES = {
 }
 
 
+# Cached data loading and response-shaping helpers.
 @lru_cache(maxsize=len(CITY_DATA))
 def _cached_city_data(city: str) -> pd.DataFrame:
     """Load each static CSV once per process to avoid repeated parsing."""
@@ -65,6 +66,7 @@ def create_app(
     check_readiness = readiness_checker or check_dataset_readiness
     app = FastAPI(title="BikeShare API", version="1.0.0")
 
+    # Process health and dataset readiness endpoints.
     @app.get("/api/healthz")
     async def health() -> dict[str, str]:
         """Report process health without touching the datasets."""
@@ -82,6 +84,7 @@ def create_app(
             )
         return {"status": "ready", "datasets": datasets}
 
+    # City and available-filter discovery endpoints.
     @app.get("/api/cities")
     def list_cities() -> dict[str, object]:
         return {
@@ -117,6 +120,7 @@ def create_app(
             },
         }
 
+    # Filtered trip-statistics endpoint.
     @app.get("/api/statistics", response_model=None)
     def get_statistics(
         city: CityId,

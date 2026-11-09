@@ -8,6 +8,7 @@ MONTHS = {"january": 1, "february": 2, "march": 3, "april": 4, "may": 5, "june":
 WEEKDAYS = ("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
 
 
+# Input validation and filter-value normalization.
 def _validate_frame(frame: pd.DataFrame) -> None:
     missing = sorted(REQUIRED_COLUMNS - set(frame.columns))
     if missing:
@@ -62,6 +63,7 @@ def filter_trips(
     return result
 
 
+# Trip counts and duration summaries.
 def _counts(series: pd.Series, field: str) -> list[dict[str, object]]:
     counts = series.dropna().value_counts()
     return [
@@ -77,6 +79,7 @@ def _duration_stats(frame: pd.DataFrame) -> dict[str, float | None]:
     return {"total": float(values.sum()), "average": float(values.mean())}
 
 
+# Popular month, weekday, and hour summaries for charts and rankings.
 def _popular_times(starts: pd.Series, limit: int) -> dict[str, list[dict[str, object]]]:
     month_counts = starts.dt.month.value_counts().sort_index()
     weekday_counts = starts.dt.day_name().value_counts()
@@ -85,8 +88,10 @@ def _popular_times(starts: pd.Series, limit: int) -> dict[str, list[dict[str, ob
         pd.Timestamp(2000, int(month), 1).month_name(): int(count)
         for month, count in month_counts.items()
     }
+    # Keep all weekdays, including zero-count days, for complete chart distributions.
     weekdays = {day: int(weekday_counts.get(day, 0)) for day in WEEKDAYS}
     hours = {int(hour): int(count) for hour, count in hour_counts.items()}
+    # Break ties consistently: calendar month, alphabetical weekday, and ascending hour.
     top_months = sorted(months.items(), key=lambda item: (-item[1], MONTHS[item[0].lower()]))[:limit]
     top_weekdays = sorted(weekdays.items(), key=lambda item: (-item[1], item[0]))[:limit]
     top_hours = sorted(hours.items(), key=lambda item: (-item[1], item[0]))[:limit]
@@ -102,6 +107,7 @@ def _popular_times(starts: pd.Series, limit: int) -> dict[str, list[dict[str, ob
     }
 
 
+# Available demographic counts and birth-year summaries.
 def _demographics(frame: pd.DataFrame) -> dict[str, object]:
     result: dict[str, object] = {}
     for column in sorted(DEMOGRAPHIC_COLUMNS):
@@ -126,6 +132,7 @@ def _demographics(frame: pd.DataFrame) -> dict[str, object]:
     return result
 
 
+# Assemble the complete statistics response from the filtered trips.
 def analyze_trips(
     frame: pd.DataFrame,
     *,

@@ -22,6 +22,7 @@ const DEFAULT_SELECTION: FilterSelection = {
   weekday: null,
 }
 
+// Read the saved preference when initializing the dashboard's theme state.
 function readInitialTheme(): 'dark' | 'light' {
   try {
     return localStorage.getItem('bikeshare-theme') === 'light' ? 'light' : 'dark'
@@ -38,6 +39,7 @@ function ChartLoading() {
 
 // Dashboard state, data loading, filter actions, and page composition.
 function App() {
+  // Application, filter, and request state.
   const [theme, setTheme] = useState<'dark' | 'light'>(readInitialTheme)
   const [cities, setCities] = useState<City[]>([])
   const [citiesError, setCitiesError] = useState<string | null>(null)
@@ -52,6 +54,7 @@ function App() {
   const [statsError, setStatsError] = useState<string | null>(null)
   const activeStatsRequest = useRef<AbortController | null>(null)
 
+  // Apply theme changes and persist the preference when browser storage is available.
   useEffect(() => {
     document.documentElement.dataset.theme = theme
     document
@@ -119,6 +122,7 @@ function App() {
     }
   }, [])
 
+  // Start the initial analysis and cancel its timer or request when the app unmounts.
   useEffect(() => {
     const timer = window.setTimeout(() => void analyze(DEFAULT_SELECTION), 0)
     return () => {
@@ -127,6 +131,7 @@ function App() {
     }
   }, [analyze])
 
+  // Apply submitted filters and update the draft selection from the form.
   const onSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     void analyze(draft)
@@ -159,6 +164,7 @@ function App() {
     setOptionsRetry((count) => count + 1)
   }
 
+  // Derive labels and stale-result state for the current page.
   const cityName = cities.find((city) => city.id === draft.city)?.name ?? 'BikeShare'
   const filtersChanged =
     stats &&
@@ -166,6 +172,7 @@ function App() {
       stats.filters.month !== draft.month ||
       stats.filters.weekday !== draft.weekday)
 
+  // Compose the page header, analysis sections, and dataset context.
   return (
     <div className="min-h-screen bg-canvas text-ink transition-colors duration-200">
       {/* Application header and theme controls */}

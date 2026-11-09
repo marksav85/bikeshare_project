@@ -3,10 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="theme-color" content="#0b1326" />
-    <meta name="description" content="Explore historical bike-sharing trip patterns across Chicago, New York City, and Washington." />
+    <meta
+      name="description"
+      content="Explore historical bike-sharing trip patterns across Chicago, New York City, and Washington."
+    />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Apply the saved theme before React mounts to avoid a flash of the wrong theme. -->
     <script>
       try {
         const theme = localStorage.getItem('bikeshare-theme')

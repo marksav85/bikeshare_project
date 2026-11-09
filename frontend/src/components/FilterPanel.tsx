@@ -75,6 +75,7 @@ export function FilterPanel({
         )}
       </div>
 
+      {/* City selection and its available-city feedback. */}
       <fieldset>
         <legend className="mb-2 text-xs font-semibold uppercase tracking-[0.1em] text-muted">
           Select city
@@ -131,6 +132,7 @@ export function FilterPanel({
         </p>
       )}
 
+      {/* Month and weekday filters with the analysis action. */}
       <div className="mt-5 grid gap-4 lg:grid-cols-[1fr_1fr_auto] lg:items-end">
         <label className="block text-xs font-semibold uppercase tracking-[0.1em] text-muted">
           Month
@@ -181,6 +183,7 @@ export function FilterPanel({
           {statsLoading ? 'Analyzing…' : 'Analyze Trips'}
         </button>
       </div>
+      {/* Filter-option loading errors can be retried without leaving the form. */}
       {optionsError && (
         <p role="alert" className="mt-3 flex flex-wrap items-center gap-3 text-sm text-danger">
           {optionsError}

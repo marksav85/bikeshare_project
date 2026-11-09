@@ -10,6 +10,7 @@ async function getJson<T>(path: string, signal?: AbortSignal): Promise<T> {
         : null
     if (typeof detail === 'string') throw new Error(detail)
     if (response.status === 422) {
+      // FastAPI returns structured validation details; show users a concise filter-specific message.
       throw new Error('Choose a supported city, month, and weekday.')
     }
     throw new Error('The BikeShare service could not complete the request.')

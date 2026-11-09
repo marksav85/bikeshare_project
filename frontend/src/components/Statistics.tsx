@@ -4,6 +4,7 @@ import type { LucideIcon } from 'lucide-react'
 import { Panel } from './Panel'
 import type { Statistics as StatisticsData } from '../types'
 
+// Shared number, duration, and hour labels for the statistics panels.
 function formatCount(value: number): string {
   return new Intl.NumberFormat('en-US').format(value)
 }
@@ -22,6 +23,7 @@ function formatHour(hour: number | undefined): string {
   return `${formatter.format(start)}–${formatter.format(end)}`
 }
 
+// Summary metric cards.
 function MetricCard({
   label,
   value,
@@ -90,6 +92,7 @@ export function MetricCards({ stats }: { stats: StatisticsData }) {
   )
 }
 
+// Station and route ranking contracts and presentation.
 type StationRanking = { station: string; trips: number }
 type RouteRanking = { start_station: string; end_station: string; trips: number }
 
@@ -163,6 +166,7 @@ export function RankingList(props: RankingListProps) {
   )
 }
 
+// Demographic availability and recorded-value summaries.
 function UnavailableMessage() {
   return (
     <p className="rounded-lg bg-inset p-3 text-sm text-muted">
@@ -183,6 +187,7 @@ function DemographicStat({ label, value }: { label: string; value: string }) {
 export function Demographics({ stats }: { stats: StatisticsData }) {
   const gender = stats.demographics.gender
   const birth = stats.demographics.birth_year
+  // Percentages use reported gender values; missing records are shown separately below.
   const genderTotal = gender.counts.reduce((sum, item) => sum + item.trips, 0)
   return (
     <Panel

@@ -15,6 +15,7 @@ import { Bike, CalendarDays, Clock3 } from 'lucide-react'
 import { Panel } from './Panel'
 import type { Statistics } from '../types'
 
+// Palette used to distinguish rider categories in the pie chart and legend.
 const RIDER_COLORS = [
   'var(--chart-cyan)',
   'var(--chart-green)',
@@ -22,6 +23,7 @@ const RIDER_COLORS = [
   'var(--chart-orange)',
 ]
 
+// Shared chart labels and tooltip presentation.
 function formatCount(value: number): string {
   return new Intl.NumberFormat('en-US').format(value)
 }
@@ -62,6 +64,7 @@ function ChartTooltip({
   )
 }
 
+// Trips grouped across all 24 start-time hours.
 export function HourlyChart({ stats }: { stats: Statistics }) {
   const hourlyCounts = new Map(stats.distributions.hours.map((item) => [item.hour, item.trips]))
   const data = Array.from({ length: 24 }, (_, hour) => ({
@@ -127,6 +130,7 @@ export function HourlyChart({ stats }: { stats: Statistics }) {
   )
 }
 
+// Weekday distribution, including days with zero trips.
 export function WeekdayChart({ stats }: { stats: Statistics }) {
   return (
     <Panel
@@ -184,6 +188,7 @@ export function WeekdayChart({ stats }: { stats: Statistics }) {
   )
 }
 
+// Rider-type distribution and matching category legend.
 export function RiderChart({ stats }: { stats: Statistics }) {
   const total = stats.rider_types.reduce((sum, item) => sum + item.trips, 0)
   const data = stats.rider_types.map((item) => ({ ...item, name: toTitle(item.type) }))
